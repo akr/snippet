@@ -6,6 +6,8 @@ class Hash
     If the hash has no corresponding value,
     ((|default|)) or evaluated value of the block is assigned with ((|key|)) in
     the hash, then the assigned value is returned.
+
+    See also ((<ruby-dev:13982>)).
 =end
   def fetch!(key, *rest)
     len1 = 1 + rest.length
