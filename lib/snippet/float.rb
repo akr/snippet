@@ -308,9 +308,9 @@ class Float
       f = -self
     else 
       if 0 < 1.0/self
-        return 1, self, 0
+        return 1, 0, 0
       else
-        return -1, -self, 0
+        return -1, 0, 0
       end
     end
     f, e = Math.frexp(f)
