@@ -6,7 +6,13 @@ def Regexp.alt(*args)
     if Regexp === args[0]
       args[0]
     else
-      Regexp.new(Regexp.quote(args[0].to_s))
+      arg = args[0]
+      if arg.respond_to? :to_str
+        arg = arg.to_str
+      else
+        raise TypeError, "cannot convert #{arg.class} to String"
+      end
+      Regexp.new(Regexp.quote(arg))
     end
   else
     code = nil
@@ -19,8 +25,10 @@ def Regexp.alt(*args)
           code = arg.kcode
         end
         arg.to_s
+      elsif arg.respond_to? :to_str
+        Regexp.quote(arg.to_str)
       else
-        Regexp.quote(arg.to_s)
+        raise TypeError, "cannot convert #{arg.class} to String"
       end
     }.join('|')
 
@@ -72,8 +80,8 @@ if $0 == __FILE__
       assert_equal('euc', Regexp.alt(/a/, /b/e).kcode)
       assert_raises(ArgumentError) { Regexp.alt(/a/e, /b/s) }
 
-      assert_nothing_thrown { Regexp.alt(1) }
-      assert_instance_of(Regexp, Regexp.alt(1))
+      assert_raises(TypeError) { Regexp.alt(1) }
+      assert_raises(TypeError) { Regexp.alt(1, 2) }
 
       assert_instance_of(Regexp, Regexp.alt("a"))
       assert_instance_of(Regexp, Regexp.alt("*"))
