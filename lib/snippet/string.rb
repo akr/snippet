@@ -24,6 +24,23 @@ class String
     result.expand_tab!
     result
   end
+
+  # xxx: scan2 cannot set $~ of caller as scan.
+  def scan2(re)
+    pos = 0
+    scan(re) {|*v|
+      pos2 = $~.begin(0)
+      if pos < pos2
+        # set $~ of caller to nil
+        yield self[pos...pos2]
+        pos = pos2
+      end
+      # set $~ of caller to $~
+      yield *v
+      pos = $~.end(0)
+    }
+  end
+
 end
 
 if __FILE__ == $0
