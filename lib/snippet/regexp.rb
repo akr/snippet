@@ -3,16 +3,13 @@ def Regexp.alt(*args)
   when 0
     /(?!)/
   when 1
-    if Regexp === args[0]
-      args[0]
+    arg = args[0]
+    if Regexp === arg
+      arg
+    elsif arg.respond_to? :to_str
+      Regexp.new(Regexp.quote(arg.to_str))
     else
-      arg = args[0]
-      if arg.respond_to? :to_str
-        arg = arg.to_str
-      else
-        raise TypeError, "cannot convert #{arg.class} to String"
-      end
-      Regexp.new(Regexp.quote(arg))
+      raise TypeError, "cannot convert #{arg.class} to String"
     end
   else
     code = nil
