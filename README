@@ -1,0 +1,7 @@
+= Snippets for Builtin Classes
+
+== Example
+
+require 'snippet/string'
+
+p "abc".starts_with? "ab"
