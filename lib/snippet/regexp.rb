@@ -89,6 +89,33 @@ if $0 == __FILE__
       assert_match(/\A#{Regexp.alt("*", "|")}\z/, "*")
       assert_match(/\A#{Regexp.alt("*", "|")}\z/, "|")
       assert_no_match(/\A#{Regexp.alt("*", "|")}\z/, "a")
+
+      assert_match(/\A#{Regexp.alt(/a/i, /b/)}\z/, "A")
+    end
+
+    def test_union
+      assert_equal("(?!)", Regexp.union.source)
+      assert_equal(nil, Regexp.union.kcode)
+
+      assert_equal(nil, Regexp.union(/a/, /b/).kcode)
+      assert_equal('euc', Regexp.union(/a/e, /b/).kcode)
+      assert_equal('euc', Regexp.union(/a/, /b/e).kcode)
+      assert_raises(ArgumentError) { Regexp.union(/a/e, /b/s) }
+
+      assert_raises(TypeError) { Regexp.union(1) }
+      assert_raises(TypeError) { Regexp.union(1, 2) }
+
+      assert_instance_of(Regexp, Regexp.union("a"))
+      assert_instance_of(Regexp, Regexp.union("*"))
+      assert_instance_of(Regexp, Regexp.union("*", "|"))
+
+      assert_match(/\A#{Regexp.union("*")}\z/, "*")
+      assert_no_match(/\A#{Regexp.union("*")}\z/, "a")
+      assert_match(/\A#{Regexp.union("*", "|")}\z/, "*")
+      assert_match(/\A#{Regexp.union("*", "|")}\z/, "|")
+      assert_no_match(/\A#{Regexp.union("*", "|")}\z/, "a")
+
+      assert_match(/\A#{Regexp.union(/a/i, /b/)}\z/, "A")
     end
 
     def test_anchor

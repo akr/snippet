@@ -1,6 +1,4 @@
 class Float
-  FLT_RADIX = 2
-
   def split
     fractional = []
     f, exp = Math.frexp(self)
@@ -20,7 +18,7 @@ class Float
     end
 
     while f != 0
-      f *= FLT_RADIX
+      f *= RADIX
 
       # xxx: modf should be used.
       d = f.to_i
@@ -163,6 +161,27 @@ class Float
     [sign, exp, mant]
   end
 
+  def decode2
+    s = [self].pack("G").unpack("B*")[0]
+    sign = s[0,1] == '0' ? "+" : "-"
+    exp = Integer("0b#{s[1,11]}")
+    mant = s[12,52]
+    if exp == 2047
+      if /\A0*\z/ !~ mant
+        return "NaN"
+      else
+        return "#{sign}Inf"
+      end
+    elsif exp == 0
+      mant = "0#{mant}"
+      exp = exp - 1022 - 52
+    else
+      mant = "1#{mant}"
+      exp = exp - 1023 - 52
+    end
+    return "#{sign}0b#{mant}p#{exp}"
+  end
+
   def Float.encode(sign_, exp_, mant_)
     sign = sign_.gsub(/\(.*\)/, '')
     exp = exp_.gsub(/\(.*\)/, '')
@@ -275,5 +294,39 @@ class Float
       end
       sign * Math.ldexp(q.to_f, exp2) 
     end
+  end
+
+  def decompose3
+    if !self.finite?
+      raise ArgumentError, "not a finite float: #{self.inspect}"
+    end
+    if 0 < self
+      sign = 1
+      f = self
+    elsif self < 0
+      sign = -1
+      f = -self
+    else 
+      if 0 < 1.0/self
+        return 1, self, 0
+      else
+        return -1, -self, 0
+      end
+    end
+    f, e = Math.frexp(f)
+    bits = Float::MANT_DIG
+    bits -= Float::MIN_EXP-e if e < Float::MIN_EXP
+    f *= Math.ldexp(1, bits)
+    e -= bits
+    [sign, f.to_i, e]
+  end
+  
+  def Float.compose3(sign, mantissa, exponent)
+    max = 1 << Float::MANT_DIG
+    while max <= mantissa
+      mantissa >>= 1 # xxx: round to zero
+      exponent += 1
+    end
+    sign * Math.ldexp(mantissa, exponent)
   end
 end
