@@ -27,23 +27,20 @@ class Hash
 end
 
 if __FILE__ == $0
-  require 'runit/testcase'
-  require 'runit/cui/testrunner'
+  require 'test/unit'
 
-  class HashSnippetTest < RUNIT::TestCase
+  class HashSnippetTest < Test::Unit::TestCase
     def test_fetch!
       h = {1=>2, 3=>4}
       assert_equal(6, h.fetch!(5, 6))
       assert_equal(6, h[5])
       assert_equal(8, h.fetch!(7) { 8 })
       assert_equal(8, h[7])
-      assert_exception(ArgumentError) { h.fetch!(1) }
-      assert_exception(ArgumentError) { h.fetch!(1, 2) { 3 } }
-      assert_exception(ArgumentError) { h.fetch!(2) }
-      assert_exception(ArgumentError) { h.fetch!(2, 2) { 3 } }
+      assert_raises(ArgumentError) { h.fetch!(1) }
+      assert_raises(ArgumentError) { h.fetch!(1, 2) { 3 } }
+      assert_raises(ArgumentError) { h.fetch!(2) }
+      assert_raises(ArgumentError) { h.fetch!(2, 2) { 3 } }
     end
   end
-
-  RUNIT::CUI::TestRunner.run(HashSnippetTest.suite)
 end
 

@@ -1,31 +1,24 @@
 class Integer
-=begin
---- Integer#even?
---- Integer#odd?
-    is a predicate which test self is even or odd number.
-=end
+  # predicate which test self is even number.
   def even?
     return (self & 1) == 0
   end
 
+  # predicate which test self is odd number.
   def odd?
     return (self & 1) == 1
   end
 
-=begin
---- Integer#hex
-    same as to_s(16)
-=end
+  # synonym of to_s(16).
   def hex
     return to_s(16)
   end
 end
 
 if __FILE__ == $0
-  require 'runit/testcase'
-  require 'runit/cui/testrunner'
+  require 'test/unit'
 
-  class IntegerSnippetTest < RUNIT::TestCase
+  class IntegerSnippetTest < Test::Unit::TestCase
     def test_even?
       assert_equal(false, -1073741825.even?)
       assert_equal(true,  -1073741824.even?)
@@ -60,7 +53,5 @@ if __FILE__ == $0
       assert_equal("-10", -16.hex)
     end
   end
-
-  RUNIT::CUI::TestRunner.run(IntegerSnippetTest.suite)
 end
 

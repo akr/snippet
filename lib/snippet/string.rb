@@ -1,25 +1,24 @@
 class String
-=begin
---- String#begins_with?(prefix)
-    is a predicate which returns true if the string begins with ((|prefix|)).
-
---- String#ends_with?(suffix)
-    is a predicate which returns true if the string ends with ((|suffix|)).
-=end
+  # predicate which returns true if the string begins with prefix.
   def begins_with?(prefix)
     return self[0, prefix.length] == prefix
   end
 
+  # predicate which returns true if the string ends with suffix.
   def ends_with?(suffix)
     suffix_length = suffix.length
     return suffix_length == 0 || self[-suffix_length, suffix_length] == suffix
   end
 
+  # expand TABs destructively.
+  # TAB width is assumed as 8.
   def expand_tab!
     self.gsub!(/([^\t]{8})|([^\t]*)\t/n) {[$+].pack("A8")}                  
     nil
   end
 
+  # returns a string which TABs are expanded.
+  # TAB width is assumed as 8.
   def expand_tab
     result = dup
     result.expand_tab!
@@ -28,10 +27,9 @@ class String
 end
 
 if __FILE__ == $0
-  require 'runit/testcase'
-  require 'runit/cui/testrunner'
+  require 'test/unit'
 
-  class StringSnippetTest < RUNIT::TestCase
+  class StringSnippetTest < Test::Unit::TestCase
     def test_begins_with?
       assert_equal(true, "".begins_with?(""))
       assert_equal(false, "".begins_with?("a"))
@@ -61,6 +59,4 @@ if __FILE__ == $0
       assert_equal("a       aa      a", "a\taa\ta".expand_tab)
     end
   end
-
-  RUNIT::CUI::TestRunner.run(StringSnippetTest.suite)
 end
