@@ -11,6 +11,14 @@ class Integer
   def odd?
     return (self & 1) == 1
   end
+
+=begin
+--- Integer#hex
+    same as to_s(16)
+=end
+  def hex
+    return to_s(16)
+  end
 end
 
 if __FILE__ == $0
@@ -44,6 +52,12 @@ if __FILE__ == $0
       assert_equal(true,  1073741823.odd?)
       assert_equal(false, 1073741824.odd?)
       assert_equal(true,  1073741825.odd?)
+    end
+
+    def test_hex
+      assert_equal("0", 0.hex)
+      assert_equal("10", 16.hex)
+      assert_equal("-10", -16.hex)
     end
   end
 
