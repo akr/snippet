@@ -316,7 +316,7 @@ class Float
     f, e = Math.frexp(f)
     bits = Float::MANT_DIG
     bits -= Float::MIN_EXP-e if e < Float::MIN_EXP
-    f *= Math.ldexp(1, bits)
+    f = Math.ldexp(f, bits)
     e -= bits
     [sign, f.to_i, e]
   end
@@ -328,5 +328,45 @@ class Float
       exponent += 1
     end
     sign * Math.ldexp(mantissa, exponent)
+  end
+end
+
+if $0 == __FILE__
+  require 'test/unit'
+
+  class TestFloatSnippet < Test::Unit::TestCase
+    def test_compose3_min_next
+      data = [
+        -1,0,1,
+        Float::MIN,
+        Float::MAX,
+        1+Float::EPSILON,
+        1-Float::EPSILON,
+        1-Float::EPSILON/2,
+      ]
+      data.each {|f1|
+        s, m, e = f1.decompose3
+        m += 1
+        f2 = Float.compose3(s, m, e)
+        assert_equal(f1, f2)
+      }
+    end
+
+    def test_compose3_min_next
+      f1 = Float::MIN
+      s, m, e = f1.decompose3
+      m += 1
+      f2 = Float.compose3(s, m, e)
+      assert_equal(f1.next, f2)
+    end
+
+    def test_compose3_min_prev
+      f1 = Float::MIN
+      s, m, e = f1.decompose3
+      m -= 1
+      f2 = Float.compose3(s, m, e)
+      assert_equal(f1.prev, f2)
+    end
+
   end
 end
