@@ -42,3 +42,31 @@ module Enumerable
     }
   end
 end
+
+if $0 == __FILE__
+  require 'test/unit'
+
+  class TestEachWith < Test::Unit::TestCase
+    def test_3x3
+      result = [[1,4,7], [2,5,8], [3,6,9]]
+      (1..3).each_with([4,5,6],[7,8,9]) {|*v|
+        assert_equal(result.shift, v)
+      }
+    end
+
+    def test_short_array
+      result = [[1,4], [2,5], [3,nil]]
+      (1..3).each_with([4,5]) {|*v|
+        assert_equal(result.shift, v)
+      }
+    end
+
+    def test_long_array
+      result = [[1,4], [2,5], [3,6]]
+      (1..3).each_with([4,5,6,7]) {|*v|
+        assert_equal(result.shift, v)
+      }
+    end
+
+  end
+end
