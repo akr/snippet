@@ -14,6 +14,17 @@ class String
     suffix_length = suffix.length
     return suffix_length == 0 || self[-suffix_length, suffix_length] == suffix
   end
+
+  def expand_tab!
+    self.gsub!(/([^\t]{8})|([^\t]*)\t/n) {[$+].pack("A8")}                  
+    nil
+  end
+
+  def expand_tab
+    result = dup
+    result.expand_tab!
+    result
+  end
 end
 
 if __FILE__ == $0
@@ -38,6 +49,16 @@ if __FILE__ == $0
       assert_equal(true, "abc".ends_with?("abc"))
       assert_equal(false, "abc".ends_with?("0abc"))
       assert_equal(false, "abc".ends_with?("ab"))
+    end
+
+    def test_expand_tab
+      assert_equal("a", "a".expand_tab)
+      assert_equal("        ", "\t".expand_tab)
+      assert_equal("a       ", "a\t".expand_tab)
+      assert_equal("aaaaaaa ", "aaaaaaa\t".expand_tab)
+      assert_equal("aaaaaaaa        ", "aaaaaaaa\t".expand_tab)
+      assert_equal("aaaaaaaaa       ", "aaaaaaaaa\t".expand_tab)
+      assert_equal("a       aa      a", "a\taa\ta".expand_tab)
     end
   end
 
