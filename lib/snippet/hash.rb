@@ -13,7 +13,7 @@ class Hash
     len1 = 1 + rest.length
     len2 = block_given? ? 1 : 2
     if len1 != len2
-      raise ArgumentError.new("wrong number of arguments(#{len2} for #{len1})")
+      raise ArgumentError.new("wrong number of arguments(#{len1} for #{len2})")
     end
 
     self.fetch(key) {|k|
