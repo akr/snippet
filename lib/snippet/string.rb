@@ -2,15 +2,14 @@ class String
 =begin
 --- String#begins_with?(prefix)
     is a predicate which returns true if the string begins with ((|prefix|)).
+
+--- String#ends_with?(suffix)
+    is a predicate which returns true if the string ends with ((|suffix|)).
 =end
   def begins_with?(prefix)
     return self[0, prefix.length] == prefix
   end
 
-=begin
---- String#ends_with?(suffix)
-    is a predicate which returns true if the string ends with ((|suffix|)).
-=end
   def ends_with?(suffix)
     suffix_length = suffix.length
     return suffix_length == 0 || self[-suffix_length, suffix_length] == suffix
