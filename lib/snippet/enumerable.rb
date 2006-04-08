@@ -46,7 +46,6 @@ module Enumerable
     r = self.to_a
     r.each_index {|i|
       j = i + rand(r.length - i)
-      p [i,j]
       t = r[i]
       r[i] = r[j]
       r[j] = t
