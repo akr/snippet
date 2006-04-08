@@ -41,6 +41,18 @@ module Enumerable
       yield v, *args.map {|arg| arg[i] }
     }
   end
+
+  def shuffle
+    r = self.to_a
+    r.each_index {|i|
+      j = i + rand(length - i)
+      p [i,j]
+      t = r[i]
+      r[i] = r[j]
+      r[j] = t
+    }
+    r
+  end
 end
 
 if $0 == __FILE__
