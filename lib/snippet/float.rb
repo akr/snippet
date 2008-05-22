@@ -38,7 +38,7 @@ class Float
     elsif exp == fractional.length
       rest = "#{fractional}"
     elsif 0 < exp && exp < fractional.length
-      rest = "#{fractional[0...exp]}.#{fractional[exp..-1]}"
+      rest = "#{fractional[0...exp].join('')}.#{fractional[exp..-1].join('')}"
     elsif exp == 0
       rest = "0.#{fractional}"
     elsif fractional.length == 1
@@ -81,7 +81,7 @@ class Float
     elsif exp == fractional.length
       rest = "#{fractional}"
     elsif 0 < exp && exp < fractional.length
-      rest = "#{fractional[0...exp]}.#{fractional[exp..-1]}"
+      rest = "#{fractional[0...exp].join('')}.#{fractional[exp..-1].join('')}"
     elsif exp == 0
       rest = "0.#{fractional}"
     elsif fractional.length == 1
