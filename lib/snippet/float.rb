@@ -96,7 +96,7 @@ class Float
     "#{sign}0x#{rest}"
   end
 
-  def next
+  def next_float
     raise FloatDomainError, "No next value for NaN" if self.nan?
     raise FloatDomainError, "No next value for infinite" if self.infinite?
     inc = 1.0
@@ -111,8 +111,9 @@ class Float
     end
     self + inc
   end
+  alias next next_float
 
-  def prev
+  def prev_float
     raise FloatDomainError, "No prev value for NaN" if self.nan?
     raise FloatDomainError, "No prev value for infinite" if self.infinite?
     inc = 1.0
@@ -127,6 +128,7 @@ class Float
     end
     self - inc
   end
+  alias prev prev_float
 
   def decode
     s = [self].pack("G").unpack("B*").first
